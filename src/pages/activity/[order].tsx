@@ -1,7 +1,7 @@
 /*
  * Created Date: April 30th 2025, 1:42:19 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: April 30th 2025, 5:02:53 pm
+ * Last Modified: April 30th 2025, 5:53:34 pm
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 
@@ -14,12 +14,13 @@ import { ReactNode, useEffect, useState } from "react"
 
 const Activity: React.FC = ( ): ReactNode => {
   const router: NextRouter = useRouter()
-  const { setActivities, userAnswers, setUserAnswers } = useActivityStore()
+  const { results, setActivities, setResults } = useActivityStore()
   const activityOrder: string = router.query.order as string
   const [currentActivity, setCurrentActivity] = useState<ActivityType>()
   const [questions, setQuestions] = useState<QuestionType[]>([])
   const [currentQuestionOrder, setCurrentQuestionOrder] = useState<number>(1)
   const [currentQuestion, setCurrentQuestion] = useState<QuestionType>()
+  const [answers, setAnswers] = useState<QuestionAnswerType[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,6 +53,16 @@ const Activity: React.FC = ( ): ReactNode => {
     }
   }, [currentActivity, currentQuestionOrder, questions])
 
+  useEffect(() => {
+    if (answers.length > 0 && answers.length === questions.length) {
+      setResults([...results, {
+        activity_name: currentActivity?.activity_name ?? '',
+        order: currentActivity?.order ?? 0,
+        answers: [...answers]
+      }])
+    }
+  }, [answers])
+
   const generateQuestionText = (): ReactNode => {
     const stimulusTokens: string[] = currentQuestion?.stimulus ? currentQuestion.stimulus.split('*') : []
 
@@ -64,19 +75,21 @@ const Activity: React.FC = ( ): ReactNode => {
     )
   }
 
-  const handleButtonClick = (answer: boolean) => {
+  const handleButtonClick = (user_answer: boolean) => {
     if (currentQuestion) {
-      setUserAnswers([...userAnswers, {
-        ...currentQuestion,
-        user_answers: [answer]
-      }])
+      setAnswers([
+        ...answers,
+        {
+          order: currentQuestionOrder,
+          correct_answer: currentQuestion.is_correct,
+          user_answer
+        }
+      ])
     }
     
-    if (currentQuestionOrder > 0 && currentQuestionOrder < questions.length) {
+    if (currentQuestionOrder < questions.length) {
       setCurrentQuestionOrder(currentQuestionOrder + 1)
     }
-
-    // TODO: redirect to results page when last question is reached
   }
 
   if (!currentActivity) {

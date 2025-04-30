@@ -1,7 +1,7 @@
 /*
  * Created Date: April 29th 2025, 4:38:11 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: April 30th 2025, 4:54:56 pm
+ * Last Modified: April 30th 2025, 5:35:06 pm
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 
@@ -34,9 +34,19 @@ type ReadApiResponseType = {
   activities: ActivityType[];
 };
 
+type QuestionAnswerType = {
+  order: number;
+  correct_answer: boolean;
+  user_answer: boolean;
+};
+
+interface ResultsType extends ActivityDetailsType {
+  answers: QuestionAnswerType[];
+}
+
 type ActivityStoreStateType = {
   activities: ActivityType[];
   setActivities: (activityList: ActivityType[]) => void;
-  userAnswers: QuestionType[];
-  setUserAnswers: (questionWithAnswers: QuestionType[]) => void;
+  results: ResultsType[];
+  setResults: (resultsList: ResultsType[]) => void;
 };
