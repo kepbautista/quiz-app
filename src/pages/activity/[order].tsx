@@ -1,7 +1,7 @@
 /*
  * Created Date: April 30th 2025, 1:42:19 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: April 30th 2025, 5:53:34 pm
+ * Last Modified: May 2nd 2025, 8:33:05 pm
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 
@@ -54,6 +54,7 @@ const Activity: React.FC = ( ): ReactNode => {
   }, [currentActivity, currentQuestionOrder, questions])
 
   useEffect(() => {
+    // already answered all questions in the activity
     if (answers.length > 0 && answers.length === questions.length) {
       setResults([...results, {
         activity_name: currentActivity?.activity_name ?? '',
@@ -89,6 +90,10 @@ const Activity: React.FC = ( ): ReactNode => {
     
     if (currentQuestionOrder < questions.length) {
       setCurrentQuestionOrder(currentQuestionOrder + 1)
+    }
+    else {
+      const { activity_name, order } = currentActivity as ActivityType
+      router.push(`/results?activity_name=${activity_name}&order=${order}`)
     }
   }
 
