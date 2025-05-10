@@ -1,11 +1,10 @@
 /*
  * Created Date: April 30th 2025, 1:42:19 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: May 2nd 2025, 8:33:05 pm
+ * Last Modified: May 10th 2025, 5:48:35 pm
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
-
-import { Button } from "@/components/ui/button"
+import QuestionSlide from "@/components/layouts/QuestionSlide"
 import LoadingSpinner from "@/components/ui/LoadingSpinner"
 import { getApiService } from "@/service"
 import useActivityStore from "@/useActivityStore"
@@ -64,18 +63,6 @@ const Activity: React.FC = ( ): ReactNode => {
     }
   }, [answers])
 
-  const generateQuestionText = (): ReactNode => {
-    const stimulusTokens: string[] = currentQuestion?.stimulus ? currentQuestion.stimulus.split('*') : []
-
-    return (
-      <p>
-        {stimulusTokens[0]}
-        <span className="font-bold">{stimulusTokens[1]}</span>
-        {stimulusTokens[2]}
-      </p>
-    )
-  }
-
   const handleButtonClick = (user_answer: boolean) => {
     if (currentQuestion) {
       setAnswers([
@@ -102,21 +89,13 @@ const Activity: React.FC = ( ): ReactNode => {
   }
 
   return (
-    <div className="flex flex-col justify-between h-screen min-h-screen">
-      <div className="flex flex-col justify-between gap-12 uppercase p-24 h-1/2">
-        <h5>{currentActivity.activity_name}</h5>
-        <h1>{`Q${currentQuestionOrder}.`}</h1>
-      </div>
-
-      <div className="border border-y-2 px-24 py-12">
-        {generateQuestionText()}
-      </div>
-      
-      <div className="flex flex-row justify-around items-center p-24">
-        <Button variant='plain' onClick={() => handleButtonClick(true)}>Correct</Button>
-        <Button variant='plain' onClick={() => handleButtonClick(false)}>Incorrect</Button>
-      </div>
-    </div>
+    <QuestionSlide
+      header={currentActivity.activity_name}
+      order={currentQuestionOrder}
+      question={currentQuestion?.stimulus || ''}
+      handleClickCorrect={() => handleButtonClick(true)}
+      handleClickIncorrect={() => handleButtonClick(false)}
+    />
   )
 }
 

@@ -68,10 +68,6 @@ const Home: React.FC = (): ReactNode => {
           )
         }
       </div>
-
-      <div>
-        <p className="uppercase">Results</p>
-      </div>
     </div>
   );
 }
