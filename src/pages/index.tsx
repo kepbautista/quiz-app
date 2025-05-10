@@ -32,7 +32,7 @@ const Home: React.FC = (): ReactNode => {
   }, [])
 
   const isActivityTwoQuestionType = (activity: ActivityType): boolean => {
-    const question: QuestionType | ActivityTwoQuestionType = activity.questions[0]
+    const question: QuestionType | MultiRoundQuestionType = activity.questions[0]
     
     if (question && 'round_title' in question && 'order' in question && 'questions' in question) {
       return true

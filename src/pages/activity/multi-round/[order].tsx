@@ -1,21 +1,25 @@
 /*
  * Created Date: May 10th 2025, 6:09:38 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: May 10th 2025, 7:40:26 pm
+ * Last Modified: May 10th 2025, 10:29:00 pm
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 import QuestionSlide from '@/components/layouts/QuestionSlide'
 import RoundTitle from '@/components/layouts/RoundTitle'
 import { getApiService } from '@/service'
+import useActivityStore from '@/useActivityStore'
 import { NextRouter, useRouter } from 'next/router'
 import { ReactNode, useEffect, useState } from 'react'
 
 const MultiRoundActivity: React.FC = (): ReactNode => {
   const router: NextRouter = useRouter()
   const activityOrder: string = router.query.order as string
+  const {multiRoundResults, setMultiRoundResults} = useActivityStore()
   
   const [activityName, setActivityName] = useState<string>('')
-  const [questions, setQuestions] = useState<ActivityTwoQuestionType[]>([])
+  const [questions, setQuestions] = useState<MultiRoundQuestionType[]>([])
+  const [answers, setAnswers] = useState<QuestionAnswerType[]>([])
+  const [results, setResults] = useState<MultiRoundQuestionAnswerType[]>([])
   
   const [currentRound, setCurrentRound] = useState<number>(0)
   const [currentRoundTitle, setCurrentRoundTitle] = useState<string>('')
@@ -33,9 +37,9 @@ const MultiRoundActivity: React.FC = (): ReactNode => {
 
         if (activity) {
           setActivityName(activity.activity_name ?? '')
-          setQuestions([...activity.questions] as ActivityTwoQuestionType[])
+          setQuestions([...activity.questions] as MultiRoundQuestionType[])
 
-          const current: ActivityTwoQuestionType = activity.questions[0] as ActivityTwoQuestionType
+          const current: MultiRoundQuestionType = activity.questions[0] as MultiRoundQuestionType
           setRound(current)
         }
       }
@@ -50,7 +54,7 @@ const MultiRoundActivity: React.FC = (): ReactNode => {
     setIsQuestionMode(true)
   }
 
-  const setRound = (round: ActivityTwoQuestionType) => {
+  const setRound = (round: MultiRoundQuestionType) => {
     setCurrentRound(round.order)
     setCurrentRoundTitle(round.round_title)
     setCurrentQuestion({...round.questions[0]})
@@ -58,19 +62,36 @@ const MultiRoundActivity: React.FC = (): ReactNode => {
   }
 
   const handleButtonClick = (user_answer: boolean) => {
-    console.log('clicked: ', user_answer)
+    if (!currentQuestion) {
+      return
+    }
+    
     if (currentQuestionOrder < questions[currentRound - 1].questions.length) {
       setCurrentQuestion({...questions[currentRound - 1].questions[currentQuestionOrder]})
       setCurrentQuestionOrder(currentQuestionOrder + 1)
-    }
-    else if (currentRound === questions.length) {
-      // TODO: redirect to results page
-      console.log('end of activity 2!!!')
+      setAnswers([...answers, {order: currentQuestionOrder, correct_answer: currentQuestion.is_correct, user_answer}])
     }
     else {
-      setIsQuestionMode(false)
-      setRound({...questions[currentRound]})
-    }
+      const currentResults: MultiRoundQuestionAnswerType[] = [...results, {round_title: currentRoundTitle, answers: [...answers, {order: currentQuestionOrder, correct_answer: currentQuestion.is_correct, user_answer}]}]
+      setResults([...currentResults])
+      
+      if (currentRound === questions.length) {
+        setMultiRoundResults([
+          ...multiRoundResults,
+          {
+            activity_name: activityName,
+            order: Number(activityOrder),
+            results: [...currentResults]
+          }
+        ])
+        router.push(`/results/multi-round?activity_name=${activityName}&order=${activityOrder}`)
+      }
+      else {
+        setIsQuestionMode(false)
+        setRound({...questions[currentRound]})
+        setAnswers([])
+      }
+    } 
   }
   
   if (!isQuestionMode) {

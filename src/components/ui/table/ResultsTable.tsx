@@ -1,7 +1,7 @@
 /*
  * Created Date: May 10th 2025, 5:52:02 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: May 10th 2025, 5:59:24 pm
+ * Last Modified: May 10th 2025, 10:52:49 pm
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 
@@ -9,7 +9,7 @@ import { ReactNode } from 'react'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 interface IResultsTableProps {
-  results: ResultsType
+  results: QuestionAnswerType[]
 }
 
 const ResultsTable: React.FC<IResultsTableProps> = ({results}: IResultsTableProps): ReactNode => {
@@ -17,11 +17,10 @@ const ResultsTable: React.FC<IResultsTableProps> = ({results}: IResultsTableProp
   const computeScore = (): number => {
     let sum: number = 0
 
-    if (results.answers?.length) {
-      const answers: QuestionAnswerType[] = results.answers
+    if (results.length) {
       
-      for (let i=0; i < results?.answers.length; i++) {
-        if (answers[i].correct_answer === answers[i].user_answer) {
+      for (let i=0; i < results.length; i++) {
+        if (results[i].correct_answer === results[i].user_answer) {
           sum++
         }
       }
@@ -31,7 +30,7 @@ const ResultsTable: React.FC<IResultsTableProps> = ({results}: IResultsTableProp
   }
   
   return (
-    <div className="max-w-1/2">
+    <div className='m-auto'>
         <Table>
           <TableHeader>
             <TableHead>#</TableHead>
@@ -40,7 +39,7 @@ const ResultsTable: React.FC<IResultsTableProps> = ({results}: IResultsTableProp
           </TableHeader>
           <TableBody className="uppercase">
             {
-              results.answers.map((item: QuestionAnswerType) => (
+              results.map((item: QuestionAnswerType) => (
                 <TableRow key={`answer-${item.order}`}>
                   <TableCell>{`Q${item.order}`}</TableCell>
                   <TableCell>{displayAnswer(item.user_answer)}</TableCell>
