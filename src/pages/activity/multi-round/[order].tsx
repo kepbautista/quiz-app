@@ -1,17 +1,43 @@
 /*
  * Created Date: May 10th 2025, 6:09:38 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: May 10th 2025, 10:29:00 pm
+ * Last Modified: May 11th 2025, 12:33:43 am
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 import QuestionSlide from '@/components/layouts/QuestionSlide'
 import RoundTitle from '@/components/layouts/RoundTitle'
-import { getApiService } from '@/service'
 import useActivityStore from '@/useActivityStore'
 import { NextRouter, useRouter } from 'next/router'
 import { ReactNode, useEffect, useState } from 'react'
 
-const MultiRoundActivity: React.FC = (): ReactNode => {
+interface IMultiRoundActivityProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any
+}
+
+export const getStaticPaths = async () => {
+  return {
+    paths: [
+      {
+        params: { order: '2' }
+      }
+    ],
+    fallback: false
+  }
+}
+
+export const getStaticProps = async () => {
+  const response = await fetch(
+      "https://s3.eu-west-2.amazonaws.com/interview.mock.data/payload.json"
+    )
+  const data = await response.json()
+
+  return {
+    props: { data }
+  }
+}
+
+const MultiRoundActivity: React.FC<IMultiRoundActivityProps> = ({data}: IMultiRoundActivityProps): ReactNode => {
   const router: NextRouter = useRouter()
   const activityOrder: string = router.query.order as string
   const {multiRoundResults, setMultiRoundResults} = useActivityStore()
@@ -29,10 +55,7 @@ const MultiRoundActivity: React.FC = (): ReactNode => {
   const [isQuestionMode, setIsQuestionMode] = useState<boolean>(false)
   
   useEffect(() => {
-    const fetchData = async () => {
-      const data: ReadApiResponseType | null = await getApiService()
-          
-      if (data) {
+      if (router.isReady && activityOrder && data) {
         const activity: ActivityType | undefined = data?.activities?.find((item: ActivityDetailsType) => item.order === Number(activityOrder))
 
         if (activity) {
@@ -43,11 +66,6 @@ const MultiRoundActivity: React.FC = (): ReactNode => {
           setRound(current)
         }
       }
-    }
-    
-    if (router.isReady && activityOrder) {
-      fetchData()
-    }
   }, [router.isReady, activityOrder])
 
   const handleClickOnRoundPage = () => {

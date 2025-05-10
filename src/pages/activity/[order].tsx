@@ -1,17 +1,43 @@
 /*
  * Created Date: April 30th 2025, 1:42:19 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: May 10th 2025, 6:29:08 pm
+ * Last Modified: May 11th 2025, 12:31:51 am
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 import QuestionSlide from "@/components/layouts/QuestionSlide"
 import LoadingSpinner from "@/components/ui/LoadingSpinner"
-import { getApiService } from "@/service"
 import useActivityStore from "@/useActivityStore"
 import { NextRouter, useRouter } from "next/router"
 import { ReactNode, useEffect, useState } from "react"
 
-const Activity: React.FC = (): ReactNode => {
+interface IActivityProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any
+}
+
+export const getStaticPaths = async () => {
+  return {
+    paths: [
+      {
+        params: { order: '1' }
+      }
+    ],
+    fallback: false
+  }
+}
+
+export const getStaticProps = async () => {
+  const response = await fetch(
+      "https://s3.eu-west-2.amazonaws.com/interview.mock.data/payload.json"
+    )
+  const data = await response.json()
+
+  return {
+    props: { data }
+  }
+}
+
+const Activity: React.FC<IActivityProps> = ({ data }: IActivityProps): ReactNode => {
   const router: NextRouter = useRouter()
   const { results, setResults } = useActivityStore()
   const activityOrder: string = router.query.order as string
@@ -22,10 +48,7 @@ const Activity: React.FC = (): ReactNode => {
   const [answers, setAnswers] = useState<QuestionAnswerType[]>([])
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data: ReadApiResponseType | null = await getApiService()
-      
-      if (data) {
+    if (router.isReady && activityOrder && data) {
         const activity: ActivityType | undefined = data?.activities?.find((item: ActivityDetailsType) => item.order === Number(activityOrder))
         
         if (activity) {
@@ -33,11 +56,7 @@ const Activity: React.FC = (): ReactNode => {
           setQuestions([...activity.questions] as QuestionType[])
         }
       }
-    }
     
-    if (router.isReady && activityOrder) {
-      fetchData()
-    }
   }, [router.isReady, activityOrder])
 
   useEffect(() => {

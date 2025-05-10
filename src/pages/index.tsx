@@ -1,24 +1,26 @@
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import { getApiService } from "@/service";
 import { NextRouter, useRouter } from "next/router";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 
-const Home: React.FC = (): ReactNode => {
-  const [data, setData] = useState<ReadApiResponseType>()
+interface IHomeProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any
+}
+
+export const getStaticProps = async () => {
+  const response = await fetch(
+      "https://s3.eu-west-2.amazonaws.com/interview.mock.data/payload.json"
+    )
+  const data = await response.json()
+
+  return {
+    props: { data }
+  }
+}
+
+const Home: React.FC<IHomeProps> = ({ data }: IHomeProps): ReactNode => {
   const router: NextRouter = useRouter()
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data: ReadApiResponseType | null = await getApiService()
-      
-      if (data) {
-        setData({...data})
-      }
-    }
-
-    fetchData()
-  }, [])
 
   const isActivityTwoQuestionType = (activity: ActivityType): boolean => {
     const question: QuestionType | MultiRoundQuestionType = activity.questions[0]
