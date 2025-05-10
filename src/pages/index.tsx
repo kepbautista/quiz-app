@@ -31,12 +31,27 @@ const Home: React.FC = (): ReactNode => {
     fetchData()
   }, [])
 
+  const isActivityTwoQuestionType = (activity: ActivityType): boolean => {
+    const question: QuestionType | ActivityTwoQuestionType = activity.questions[0]
+    
+    if (question && 'round_title' in question && 'order' in question && 'questions' in question) {
+      return true
+    }
+
+    return false
+  }
+
   const handleActivityButtonClick = (order: number) => {
     const activity: ActivityType | undefined = data?.activities?.find((item: ActivityDetailsType) => item.order === order)
 
     if (activity) {
-      // TODO: redirect based on activity type
-      router.push(`/activity/${order}`)
+      // redirect based on activity type
+      if (isActivityTwoQuestionType(activity)) {
+        router.push(`/activity/multi-round/${order}`)
+      }
+      else {
+        router.push(`/activity/${order}`)
+      }
     }
   }
 

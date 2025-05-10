@@ -1,7 +1,7 @@
 /*
  * Created Date: April 30th 2025, 1:42:19 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: May 10th 2025, 5:48:35 pm
+ * Last Modified: May 10th 2025, 6:29:08 pm
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 import QuestionSlide from "@/components/layouts/QuestionSlide"
@@ -11,9 +11,9 @@ import useActivityStore from "@/useActivityStore"
 import { NextRouter, useRouter } from "next/router"
 import { ReactNode, useEffect, useState } from "react"
 
-const Activity: React.FC = ( ): ReactNode => {
+const Activity: React.FC = (): ReactNode => {
   const router: NextRouter = useRouter()
-  const { results, setActivities, setResults } = useActivityStore()
+  const { results, setResults } = useActivityStore()
   const activityOrder: string = router.query.order as string
   const [currentActivity, setCurrentActivity] = useState<ActivityType>()
   const [questions, setQuestions] = useState<QuestionType[]>([])
@@ -26,8 +26,6 @@ const Activity: React.FC = ( ): ReactNode => {
       const data: ReadApiResponseType | null = await getApiService()
       
       if (data) {
-        setActivities([...data.activities])
-
         const activity: ActivityType | undefined = data?.activities?.find((item: ActivityDetailsType) => item.order === Number(activityOrder))
         
         if (activity) {

@@ -1,7 +1,7 @@
 /*
  * Created Date: April 29th 2025, 4:38:11 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: April 30th 2025, 5:35:06 pm
+ * Last Modified: May 10th 2025, 6:28:48 pm
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 
@@ -45,8 +45,6 @@ interface ResultsType extends ActivityDetailsType {
 }
 
 type ActivityStoreStateType = {
-  activities: ActivityType[];
-  setActivities: (activityList: ActivityType[]) => void;
   results: ResultsType[];
   setResults: (resultsList: ResultsType[]) => void;
 };
