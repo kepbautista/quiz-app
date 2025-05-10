@@ -1,7 +1,7 @@
 /*
  * Created Date: May 10th 2025, 5:10:46 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: May 10th 2025, 10:53:07 pm
+ * Last Modified: May 10th 2025, 11:33:21 pm
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 
@@ -28,16 +28,18 @@ const ActivityTwoResultsPage: React.FC = (): ReactNode => {
   
   return (
     <ResultsContainer>
-      <h4>{displayResults?.activity_name}</h4>
+      <h4 className='uppercase'>{displayResults?.activity_name}</h4>
       <h1>Results</h1>
-      {
-        displayResults?.results?.map((item: MultiRoundQuestionAnswerType) => (
-          <div key={item.round_title}>
-            <h5>{item.round_title}</h5>
-            <ResultsTable results={item.answers}/>
-          </div>
-        ))
-      }
+      <div className='flex flex-col gap-8'>
+        {
+          displayResults?.results?.map((item: MultiRoundQuestionAnswerType) => (
+            <div key={item.round_title} className='text-center uppercase'>
+              <h5 className='border-y p-6'>{item.round_title}</h5>
+              <ResultsTable results={item.answers}/>
+            </div>
+          ))
+        }
+      </div>
       <HomeButton />
     </ResultsContainer>
   )

@@ -1,19 +1,8 @@
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { getApiService } from "@/service";
-import { Geist, Geist_Mono } from "next/font/google";
 import { NextRouter, useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const Home: React.FC = (): ReactNode => {
   const [data, setData] = useState<ReadApiResponseType>()
@@ -68,18 +57,22 @@ const Home: React.FC = (): ReactNode => {
 
   return (
     <div
-      className={`${geistSans.className} ${geistMono.className} flex flex-col items-center justify-between min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
+      className='flex flex-col items-center justify-between min-h-screen pt-24 gap-16 w-full'
     >
       <h3 className="uppercase">{data?.heading}</h3>
       <h1>{data?.name}</h1>
 
-      <div className="flex flex-col gap-5 uppercase">
+      <div className="flex flex-col uppercase w-full h-full">
         {
           activityList.map((details: ActivityDetailsType) => 
-            <Button
-              key={details.activity_name}
-              onClick={() => handleActivityButtonClick(details.order)}>{details.activity_name}
-            </Button>
+            <div key={details.activity_name} className='flex justify-between items-center border-t p-5 w-full h-full'>
+              <Button
+                key={details.activity_name}
+                variant='plain'
+                className='mx-auto text-base'
+                onClick={() => handleActivityButtonClick(details.order)}>{details.activity_name}
+              </Button>
+            </div>
           )
         }
       </div>

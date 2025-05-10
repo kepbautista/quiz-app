@@ -1,7 +1,7 @@
 /*
  * Created Date: May 10th 2025, 5:52:02 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: May 10th 2025, 10:52:49 pm
+ * Last Modified: May 10th 2025, 11:05:31 pm
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 
@@ -30,7 +30,7 @@ const ResultsTable: React.FC<IResultsTableProps> = ({results}: IResultsTableProp
   }
   
   return (
-    <div className='m-auto'>
+    <div className='mx-auto'>
         <Table>
           <TableHeader>
             <TableHead>#</TableHead>
@@ -50,7 +50,7 @@ const ResultsTable: React.FC<IResultsTableProps> = ({results}: IResultsTableProp
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={2}>Score</TableCell>
+              <TableCell className="text-left" colSpan={2}>Score</TableCell>
               <TableCell className="text-right">{computeScore()}</TableCell>
             </TableRow>
           </TableFooter>
