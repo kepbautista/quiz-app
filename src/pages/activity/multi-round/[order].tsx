@@ -1,11 +1,12 @@
 /*
  * Created Date: May 10th 2025, 6:09:38 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: May 11th 2025, 12:33:43 am
+ * Last Modified: May 11th 2025, 11:36:22 am
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 import QuestionSlide from '@/components/layouts/QuestionSlide'
 import RoundTitle from '@/components/layouts/RoundTitle'
+import { API_URL } from '@/constants'
 import useActivityStore from '@/useActivityStore'
 import { NextRouter, useRouter } from 'next/router'
 import { ReactNode, useEffect, useState } from 'react'
@@ -28,7 +29,7 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async () => {
   const response = await fetch(
-      "https://s3.eu-west-2.amazonaws.com/interview.mock.data/payload.json"
+      API_URL
     )
   const data = await response.json()
 

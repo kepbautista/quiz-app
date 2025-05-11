@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { API_URL } from "@/constants";
 import { NextRouter, useRouter } from "next/router";
 import { ReactNode } from "react";
 
@@ -10,7 +11,7 @@ interface IHomeProps {
 
 export const getStaticProps = async () => {
   const response = await fetch(
-      "https://s3.eu-west-2.amazonaws.com/interview.mock.data/payload.json"
+      API_URL
     )
   const data = await response.json()
 
