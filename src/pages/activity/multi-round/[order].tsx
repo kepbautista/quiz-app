@@ -1,7 +1,7 @@
 /*
  * Created Date: May 10th 2025, 6:09:38 pm
  * Author: Kristine Bautista (kebautista@yondu.com)
- * Last Modified: May 11th 2025, 11:36:22 am
+ * Last Modified: May 11th 2025, 11:42:48 am
  * Modified By: Kristine Bautista (kebautista@yondu.com)
  */
 import QuestionSlide from '@/components/layouts/QuestionSlide'
@@ -95,14 +95,25 @@ const MultiRoundActivity: React.FC<IMultiRoundActivityProps> = ({data}: IMultiRo
       setResults([...currentResults])
       
       if (currentRound === questions.length) {
-        setMultiRoundResults([
-          ...multiRoundResults,
-          {
-            activity_name: activityName,
-            order: Number(activityOrder),
-            results: [...currentResults]
-          }
-        ])
+        if (multiRoundResults.length > 0) {
+          setMultiRoundResults([
+            ...multiRoundResults,
+            {
+              activity_name: activityName,
+              order: Number(activityOrder),
+              results: [...currentResults]
+            }
+          ])
+        }
+        else {
+          setMultiRoundResults([
+            {
+              activity_name: activityName,
+              order: Number(activityOrder),
+              results: [...currentResults]
+            }
+          ])
+        }
         router.push(`/results/multi-round?activity_name=${activityName}&order=${activityOrder}`)
       }
       else {
